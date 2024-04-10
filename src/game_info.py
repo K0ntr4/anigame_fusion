@@ -9,6 +9,7 @@ from nltk.corpus import wordnet as wn
 # Download NLTK resources if not already downloaded
 nltk.download('punkt', quiet=True)
 nltk.download('averaged_perceptron_tagger', quiet=True)
+nltk.download('wordnet', quiet=True)
 
 CURRENT_YEAR = int(time.strftime('%Y', time.gmtime(time.time())))
 DATE_RECENCY = {
