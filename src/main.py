@@ -2,7 +2,6 @@ import PySimpleGUI as sg
 from game_info import GameInfo
 from text_to_image import create_image
 
-
 def get_input():
     layout = [
         [sg.Text("What is the full name of the anime character you want to generate an image of?")],
