@@ -10,6 +10,7 @@ from nltk.corpus import wordnet as wn
 nltk.download('punkt', quiet=True)
 nltk.download('averaged_perceptron_tagger', quiet=True)
 
+CURRENT_YEAR = int(time.strftime('%Y', time.gmtime(time.time())))
 DATE_RECENCY = {
     'newest': (2021, int(time.strftime('%Y', time.gmtime(time.time())))),
     'recent': (2018, 2020),
