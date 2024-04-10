@@ -31,9 +31,15 @@ jobs:
 
     - name: Wait for NLTK data to be downloaded
       run: |
-        while [ ! -f /usr/local/share/nltk_data/tokenizers/punkt/english.pickle ] || [ ! -f /usr/local/share/nltk_data/taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle ]; do
+        count=0
+        while [ ! -f /home/runner/nltk_data/tokenizers/punkt/english.pickle ] || [ ! -f /home/runner/nltk_data/taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle ]; do
           echo "Waiting for NLTK data to be downloaded..."
           sleep 10
+          count=$((count+10))
+          if [ $count -gt 60 ]; then
+            echo "NLTK data download timeout exceeded!"
+            exit 1
+          fi
         done
 
     - name: Run unit tests
