@@ -1,5 +1,5 @@
 diffusers==0.27.2
 nltk==3.8.1
 requests==2.31.0
-torch~=2.2.2+cu121
+torch==2.0.1
 PySimpleGUI~=5.0.4
