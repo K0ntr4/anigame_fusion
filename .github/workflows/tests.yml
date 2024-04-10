@@ -43,5 +43,7 @@ jobs:
         done
 
     - name: Run unit tests
+      env:
+        NLTK_DATA: ${{ secrets.NLTK_DATA }}
       run: |
         python -m unittest discover -s tests -p 'test_*.py'
