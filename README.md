@@ -53,9 +53,9 @@ Note: CUDA support may require additional configuration and setup, and not all s
     python main.py
     ```
 
-2. Follow the on-screen prompts to customize your anime character and select game elements to incorporate into the fusion.
+2. Follow the gui to customize your anime character and select game elements to incorporate into the fusion.
 
-3. Once satisfied with the selections, the generated image will be saved to the specified directory.
+3. Once satisfied with the selections, the generated image will be previewed and can be saved to the specified directory.
 
 ## Dependencies
 
@@ -75,3 +75,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - Special thanks to the developers of `cagliostrolab/animagine-xl-3.1` for providing a fantastic library for anime character generation.
 - Thanks to the creators of the `igdb` API for enabling access to comprehensive game data.
+- Special thanks to the `PySide6` developers for providing a powerful toolkit for creating cross-platform desktop applications with Python.
+- Thanks to the `NLTK` developers for creating a comprehensive library for natural language processing tasks in Python.
+- Acknowledgements to the `requests_cache` developers for offering a convenient way to cache HTTP responses in Python applications.
+- Thanks to the `PyTorch` developers for developing an efficient and flexible deep learning framework for research and production.
