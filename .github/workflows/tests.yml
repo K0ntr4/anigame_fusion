@@ -26,24 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Download NLTK data
-      run: python -m nltk.downloader punkt averaged_perceptron_tagger
-
-    - name: Wait for NLTK data to be downloaded
-      run: |
-        count=0
-        while [ ! -f /home/runner/nltk_data/tokenizers/punkt/english.pickle ] || [ ! -f /home/runner/nltk_data/taggers/averaged_perceptron_tagger/averaged_perceptron_tagger.pickle ]; do
-          echo "Waiting for NLTK data to be downloaded..."
-          sleep 10
-          count=$((count+10))
-          if [ $count -gt 60 ]; then
-            echo "NLTK data download timeout exceeded!"
-            exit 1
-          fi
-        done
-
     - name: Run unit tests
       env:
         NLTK_DATA: ${{ secrets.NLTK_DATA }}
+        TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
+        TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       run: |
         python -m unittest discover -s tests -p 'test_*.py'
