@@ -1,5 +1,6 @@
 diffusers==0.27.2
 nltk==3.8.1
+PySide6==6.7.0
 requests==2.31.0
+requests_cache==1.2.0
 torch==2.0.1
-PySimpleGUI~=5.0.4

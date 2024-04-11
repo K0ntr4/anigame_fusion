@@ -1,15 +1,18 @@
 import os
 import time
-import requests
+
 import nltk
-from nltk.tokenize import word_tokenize
-from nltk.tag import pos_tag
+import requests
+import requests_cache
 from nltk.corpus import wordnet as wn
+from nltk.tag import pos_tag
+from nltk.tokenize import word_tokenize
 
 # Download NLTK resources if not already downloaded
 nltk.download('punkt', quiet=True)
 nltk.download('averaged_perceptron_tagger', quiet=True)
 nltk.download('wordnet', quiet=True)
+requests_cache.install_cache('api_cache', expire_after=3600)
 
 CURRENT_YEAR = int(time.strftime('%Y', time.gmtime(time.time())))
 DATE_RECENCY = {

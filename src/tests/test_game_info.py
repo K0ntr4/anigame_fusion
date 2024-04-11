@@ -1,13 +1,9 @@
 import time
 import unittest
-import sys
-import os
-
-# Add the src directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
-# Import the module to be tested
-from game_info import GameInfo, get_year_recency, get_summary_keywords, is_relevant_adjective
+from src.image.game_info import (
+    GameInfo, get_year_recency,
+    get_summary_keywords, is_relevant_adjective
+)
 
 
 class TestGameInfo(unittest.TestCase):
@@ -18,7 +14,8 @@ class TestGameInfo(unittest.TestCase):
         self.game_info.authenticate()
         self.assertIsNotNone(self.game_info.token)
         self.assertIsNotNone(self.game_info.authentication_time)
-        self.assertTrue(time.time() - self.game_info.authentication_time < self.game_info.token['expires_in'])
+        self.assertTrue(time.time() - self.game_info.authentication_time
+                        < self.game_info.token['expires_in'])
 
     def test_get_game_info(self):
         # Call the method under test
@@ -29,10 +26,14 @@ class TestGameInfo(unittest.TestCase):
         self.assertEqual(game_data['name'], 'Tekken 7')
         self.assertEqual(game_data['first_release_date'], 1424217600)
         self.assertEqual(game_data['genres'], [4])
-        self.assertEqual(game_data['summary'], 'Experience the epic conclusion of the Mishima clan and unravel the '
-                                               'reasons behind each step of their ceaseless fight. Powered by Unreal '
-                                               'Engine 4, Tekken 7 features stunning story-driven cinematic battles '
-                                               'and intense duels that can be enjoyed with friends and rivals alike '
+        self.assertEqual(game_data['summary'], 'Experience the epic conclusion of the '
+                                               'Mishima clan and unravel the '
+                                               'reasons behind each step of their ceaseless fight. '
+                                               'Powered by Unreal '
+                                               'Engine 4, Tekken 7 features stunning story-driven '
+                                               'cinematic battles '
+                                               'and intense duels that can be enjoyed with friends '
+                                               'and rivals alike '
                                                'through innovative fight mechanics.')
 
     def test_get_genres(self):
@@ -59,10 +60,14 @@ class TestGameInfo(unittest.TestCase):
         self.assertEqual(get_year_recency(time.time() - 15 * 365 * 24 * 60 * 60), 'oldest')
 
     def test_get_summary_keywords(self):
-        keywords = get_summary_keywords('Experience the epic conclusion of the Mishima clan and unravel the reasons '
-                                        'behind each step of their ceaseless fight. Powered by Unreal Engine 4, Tekken 7 '
-                                        'features stunning story-driven cinematic battles and intense duels that can be '
-                                        'enjoyed with friends and rivals alike through innovative fight mechanics.')
+        keywords = get_summary_keywords('Experience the epic conclusion of the Mishima clan '
+                                        'and unravel the reasons '
+                                        'behind each step of their ceaseless fight. Powered '
+                                        'by Unreal Engine 4, Tekken 7 '
+                                        'features stunning story-driven cinematic battles and '
+                                        'intense duels that can be '
+                                        'enjoyed with friends and rivals alike through '
+                                        'innovative fight mechanics.')
         self.assertEqual(keywords,
                          ['Experience', 'epic', 'conclusion', 'clan', 'reasons'])
 

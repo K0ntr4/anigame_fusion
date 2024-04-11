@@ -34,28 +34,28 @@ def create_image(image_params):
         "signature, extra digits, artistic error, username, scan, [abstract]"
     )
 
-    image = pipe(
+    images = pipe(
         prompt,
         negative_prompt=negative_prompt,
         width=1024,
         height=1024,
         guidance_scale=7,
         num_inference_steps=28
-    ).images[0]
+    ).images
 
     filename = (
         f"./output/{image_params['anime_name'].replace(' ', '_')}_"
         f"{image_params['game_name'].replace(' ', '_')}.png"
     )
-    image.save(filename)
 
-    return filename
+    return images, filename
 
 
 if __name__ == "__main__":
     params = {
         "recency": "recent",
         "anime_name": "Naruto Uzumaki",
+        "gender": "1boy",
         "game_name": "Final Fantasy VII",
         "game_tags": ["Action", "RPG"],
         "facial_expression": "smiling",
@@ -65,5 +65,6 @@ if __name__ == "__main__":
         "additional_tags": ["fantasy", "adventure"]
     }
 
-    output_filename = create_image(params)
-    print(f"Image saved as: {output_filename}")
+    result, output_filename = create_image(params)
+    print(len(result))
+    result[0].show()
