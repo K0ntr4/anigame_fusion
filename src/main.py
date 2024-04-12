@@ -2,14 +2,27 @@ import io
 import sys
 import threading
 from PySide6.QtWidgets import (  # pylint: disable=E0611
-    QApplication, QMainWindow, QLabel, QLineEdit,
-    QPushButton, QVBoxLayout, QWidget, QHBoxLayout)
+    QApplication, QMainWindow, QLabel,
+    QLineEdit, QPushButton, QVBoxLayout,
+    QWidget, QHBoxLayout
+)
 from PySide6.QtGui import QPixmap, QImage  # pylint: disable=E0611
+from PySide6.QtCore import Qt  # pylint: disable=E0611
 from src.image.game_info import GameInfo
 from src.image.text_to_image import create_image
+from src.image.character_info import get_closest_character
 
 
 def pil2pixmap(image):
+    """
+    Convert a PIL image to a QPixmap.
+
+    Args:
+        image (PIL.Image): The input PIL image to convert.
+
+    Returns:
+        QPixmap: The converted QPixmap.
+    """
     bytes_img = io.BytesIO()
     image.save(bytes_img, format='PNG')
     qimg = QImage()
@@ -18,16 +31,32 @@ def pil2pixmap(image):
 
 
 class AnimeImageGenerator:
+    """
+    Class responsible for generating anime images.
+    """
+
     def __init__(self):
+        """
+        Initialize AnimeImageGenerator.
+        """
         self.last_input_values = {}
         self.output_filename = None
         self.images = []
         self.current_index = 0
 
     def process_image(self, input_values, window_element):
+        """
+        Process an image based on input values.
+
+        Args:
+            input_values (dict): A dictionary containing input values.
+            window_element: The window element to update with the generated image.
+        """
         window_element.input_controls["progress_label"].setText("Generating image...")
         game_info = GameInfo()
         recency, game_tags = game_info.get_game_keywords(input_values["game_name"])
+        input_values["processed_anime_name"] = (
+            get_closest_character(input_values["anime_name"]))
         input_values.update({"recency": recency, "game_tags": game_tags})
 
         if input_values == self.last_input_values and self.output_filename:
@@ -39,6 +68,9 @@ class AnimeImageGenerator:
             self.last_input_values = input_values
 
     def save_image(self):
+        """
+        Save the current image.
+        """
         if self.output_filename:
             pixmap = pil2pixmap(self.images[self.current_index])
             pixmap.save(self.output_filename)
@@ -46,12 +78,18 @@ class AnimeImageGenerator:
 
 
 class AnimeCharacterImageGenerator(QMainWindow):
+    """
+    Class representing the main window of the Anime Character Image Generator application.
+    """
+
     def __init__(self):
+        """
+        Initialize AnimeCharacterImageGenerator.
+        """
         super().__init__()
-        self.inputs_layout = None
+        self.image_generator = AnimeImageGenerator()
         self.inputs = {
             "anime_name": QLineEdit(),
-            "gender": QLineEdit("1boy"),
             "game_name": QLineEdit(),
             "facial_expression": QLineEdit("smile"),
             "looking_at": QLineEdit("viewer"),
@@ -59,10 +97,20 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "daytime": QLineEdit("night"),
             "additional_tags": QLineEdit()
         }
-        self.input_controls = {
-            "generate_button": QPushButton("Generate Image"),
-            "progress_label": QLabel("")
+        self.inputs_labels = {
+            "anime_name": "Anime character name",
+            "game_name": "Game name",
+            "facial_expression": "Facial expression",
+            "looking_at": "Looking at",
+            "indoors": "Indoors/outdoors",
+            "daytime": "Daytime/night",
+            "additional_tags": "Additional tags"
         }
+        self.input_controls = {
+            "progress_label": QLabel(""),
+            "generate_button": QPushButton("Generate Image")
+        }
+        self.inputs_layout = None
         self.image_controls = {
             "image_label": QLabel(""),
             "back_button": QPushButton("Back"),
@@ -72,60 +120,71 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "prev_button": QPushButton("<"),
             "next_button": QPushButton(">"),
         }
-
-        self.setWindowTitle("Anime Character Image Generator")
-        self.image_generator = AnimeImageGenerator()
         self.setup_ui()
+        self.show_input_fields()
 
     def setup_ui(self):
+        """
+        Set up the user interface.
+        """
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
-
         layout = QVBoxLayout()
 
+        # Inputs
         self.inputs_layout = QVBoxLayout()
-
-        for label_text, input_widget in self.inputs.items():
-            self.inputs_layout.addWidget(QLabel(label_text))
+        for key, input_widget in self.inputs.items():
+            self.inputs_layout.addWidget(QLabel(self.inputs_labels[key]))
             self.inputs_layout.addWidget(input_widget)
         layout.addLayout(self.inputs_layout)
 
+        # Input controls
         self.input_controls["generate_button"].clicked.connect(self.generate_image)
+        self.input_controls["progress_label"].setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.input_controls["progress_label"].setScaledContents(True)
 
+        # Image controls
         self.image_controls["image_label"].setScaledContents(True)
-
         self.image_controls["back_button"].clicked.connect(self.show_input_fields)
-        self.image_controls["back_button"].hide()
-
         self.image_navigation_buttons["prev_button"].clicked.connect(self.show_previous_image)
-        self.image_navigation_buttons["prev_button"].hide()
-
         self.image_navigation_buttons["next_button"].clicked.connect(self.show_next_image)
-        self.image_navigation_buttons["next_button"].hide()
+        self.image_controls["save_button"].clicked.connect(self.image_generator.save_image)
 
+        # Image navigation buttons
         navigation_button_layout = QHBoxLayout()
         navigation_button_layout.addWidget(self.image_navigation_buttons["prev_button"])
         navigation_button_layout.addWidget(self.image_navigation_buttons["next_button"])
         layout.addLayout(navigation_button_layout)
 
-        self.image_controls["save_button"].clicked.connect(self.image_generator.save_image)
-        self.image_controls["save_button"].hide()
-
-        for item in self.input_controls.values():
-            layout.addWidget(item)
+        # Add all elements to the layout
         for item in self.image_controls.values():
+            layout.addWidget(item)
+        for item in self.input_controls.values():
             layout.addWidget(item)
         central_widget.setLayout(layout)
 
     def generate_image(self):
+        """
+        Generate an image based on user input.
+        """
+        if not self.inputs["game_name"].text():
+            self.input_controls["progress_label"].setText(
+                "Please enter a game name.")
+            return
+        if not self.inputs["anime_name"].text():
+            self.input_controls["progress_label"].setText(
+                "Please enter an anime character name.")
+            return
         input_values = {key: widget.text().lower().replace(',', ' ')
                         for key, widget in self.inputs.items()}
         threading.Thread(target=self.image_generator.process_image,
                          args=(input_values, self)).start()
 
     def show_image(self):
+        """
+        Show the generated image.
+        """
         self.setWindowTitle(self.image_generator.output_filename)
-        self.input_controls["progress_label"].clear()
 
         for i in range(self.inputs_layout.count()):
             widget = self.inputs_layout.itemAt(i).widget()
@@ -134,41 +193,48 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
         for item in self.input_controls.values():
             item.hide()
+
         for item in self.image_controls.values():
             item.show()
+        if len(self.image_generator.images) != 1:
+            for item in self.image_navigation_buttons.values():
+                item.show()
 
         pixmap = pil2pixmap(self.image_generator.images[self.image_generator.current_index])
         self.image_controls["image_label"].setPixmap(pixmap)
 
-        if len(self.image_generator.images) == 1:
-            self.image_navigation_buttons["prev_button"].hide()
-            self.image_navigation_buttons["next_button"].hide()
-        else:
-            self.image_navigation_buttons["prev_button"].show()
-            self.image_navigation_buttons["next_button"].show()
-
     def show_input_fields(self):
+        """
+        Show the input fields.
+        """
         self.setWindowTitle("Anime Character Image Generator")
-        self.image_controls["image_label"].clear()
-        self.image_controls["image_label"].hide()
         self.input_controls["progress_label"].clear()
-        self.input_controls["progress_label"].show()
+
+        for item in self.image_controls.values():
+            item.hide()
+        for item in self.image_navigation_buttons.values():
+            item.hide()
 
         for i in range(self.inputs_layout.count()):
             widget = self.inputs_layout.itemAt(i).widget()
             if widget:
                 widget.show()
 
-        self.input_controls["generate_button"].show()
-        for item in self.image_controls.values():
-            item.hide()
+        for item in self.input_controls.values():
+            item.show()
 
     def show_previous_image(self):
+        """
+        Show the previous image.
+        """
         if self.image_generator.current_index > 0:
             self.image_generator.current_index -= 1
             self.show_image()
 
     def show_next_image(self):
+        """
+        Show the next image.
+        """
         if self.image_generator.current_index < len(self.image_generator.images) - 1:
             self.image_generator.current_index += 1
             self.show_image()

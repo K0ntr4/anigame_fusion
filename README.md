@@ -79,3 +79,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - Thanks to the `NLTK` developers for creating a comprehensive library for natural language processing tasks in Python.
 - Acknowledgements to the `requests_cache` developers for offering a convenient way to cache HTTP responses in Python applications.
 - Thanks to the `PyTorch` developers for developing an efficient and flexible deep learning framework for research and production.
+- Gratitude to the developers of `thefuzz` for providing a useful library for fuzzy string matching, enhancing the accuracy of character name search.
