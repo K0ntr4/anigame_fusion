@@ -32,4 +32,4 @@ jobs:
         TWITCH_CLIENT_ID: ${{ secrets.TWITCH_CLIENT_ID }}
         TWITCH_CLIENT_SECRET: ${{ secrets.TWITCH_CLIENT_SECRET }}
       run: |
-        python -m unittest discover -s tests -p 'test_*.py'
+        python -m unittest discover -s src/tests -p 'test_*.py'
