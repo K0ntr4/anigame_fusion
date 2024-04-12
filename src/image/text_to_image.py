@@ -51,7 +51,7 @@ def create_image(image_params):
         image_params.get('daytime', ''),
         image_params.get('game_name', ''),
         ', '.join(image_params.get('game_tags', [])).lower(),
-        *image_params.get('additional_tags', [])
+        image_params.get('additional_tags', '').lower()
     ]
     prompt_parts = [part.lower() for part in prompt_parts if part]
 

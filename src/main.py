@@ -72,8 +72,7 @@ class AnimeImageGenerator:
         Save the current image.
         """
         if self.output_filename:
-            pixmap = pil2pixmap(self.images[self.current_index])
-            pixmap.save(self.output_filename)
+            self.images[self.current_index].save(self.output_filename)
             print(f"Image saved as: {self.output_filename}")
 
 
@@ -104,7 +103,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "looking_at": "Looking at",
             "indoors": "Indoors/outdoors",
             "daytime": "Daytime/night",
-            "additional_tags": "Additional tags"
+            "additional_tags": "Additional tags (Separated by commas)"
         }
         self.input_controls = {
             "progress_label": QLabel(""),
@@ -175,7 +174,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
             self.input_controls["progress_label"].setText(
                 "Please enter an anime character name.")
             return
-        input_values = {key: widget.text().lower().replace(',', ' ')
+        input_values = {key: widget.text().lower().replace(',', ' ').lstrip().rstrip()
                         for key, widget in self.inputs.items()}
         threading.Thread(target=self.image_generator.process_image,
                          args=(input_values, self)).start()
