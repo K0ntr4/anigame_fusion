@@ -26,7 +26,13 @@ The Anime Game Character Fusion Generator is a fun and creative side project des
     pip install -r requirements.txt
     ```
 
-3. Obtain API credentials for the `igdb` API and set them as environment variables TWITCH_CLIENT_ID & TWITCH_CLIENT_SECRET with your actual API key.
+3. (Optional) [Install Sass](https://sass-lang.com/install/) and compile Sass file into CSS:
+
+    ```bash
+    sass ./resources/form.scss ./resources/form.css
+    ```
+
+4. Obtain API credentials for the `igdb` API and set them as environment variables TWITCH_CLIENT_ID & TWITCH_CLIENT_SECRET with your actual API key.
 
 ## Installation (Optional: CUDA Support)
 

@@ -26,6 +26,8 @@ def read_stylesheet(file_path):
     Returns:
         str: The contents of the stylesheet file.
     """
+    if not os.path.exists(file_path):
+        return None
     with open(file=file_path, encoding='utf-8', mode='r') as file:
         return file.read()
 
@@ -260,7 +262,9 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(read_stylesheet('./resources/form.css'))
+    stylesheet = read_stylesheet('./resources/form.css')
+    if stylesheet:
+        app.setStyleSheet(stylesheet)
     window = AnimeCharacterImageGenerator()
     window.resize(1000, 1000)
     window.show()
