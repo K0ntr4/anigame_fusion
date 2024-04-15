@@ -1,0 +1,42 @@
+$main-color: #222831;
+$secondary-color: #393E46;
+$accent-color: #00ADB5;
+$secondary-accent-color: #EEEEEE;
+
+$font-size: 16px;
+
+.QWidget {
+	background-color: $main-color;
+}
+
+.QLabel {
+	color: $accent-color;
+	background-color: $main-color;
+}
+
+.QLineEdit {
+	color: $secondary-accent-color;
+	border:none;
+	border-bottom: 2px solid $accent-color;
+	padding-bottom: 2px;
+	background: $main-color;
+}
+
+.QPushButton {
+	border: 0;
+	border-radius: 5px;
+	color: $accent-color;
+	background-color: $main-color;
+	&:hover {
+		border: 2px solid $secondary-color;
+		background-color: $secondary-color;
+	}
+	&:pressed {
+		border: 2px solid $accent-color;
+		background-color: $accent-color;
+	}
+	&:disabled {
+		color: $main-color;
+		background-color: $main-color;
+	}
+}

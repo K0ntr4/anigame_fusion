@@ -1,6 +1,9 @@
 import io
+import os
 import sys
 import threading
+import time
+
 from PySide6.QtWidgets import (  # pylint: disable=E0611
     QApplication, QMainWindow, QLabel,
     QLineEdit, QPushButton, QVBoxLayout,
@@ -10,7 +13,21 @@ from PySide6.QtGui import QPixmap, QImage  # pylint: disable=E0611
 from PySide6.QtCore import Qt  # pylint: disable=E0611
 from src.image.game_info import GameInfo
 from src.image.text_to_image import create_image
-from src.image.character_info import get_closest_character
+from src.image.character_info import get_closest_characters
+
+
+def read_stylesheet(file_path):
+    """
+    Read the contents of a stylesheet file.
+
+    Args:
+        file_path (str): The path to the stylesheet file.
+
+    Returns:
+        str: The contents of the stylesheet file.
+    """
+    with open(file=file_path, encoding='utf-8', mode='r') as file:
+        return file.read()
 
 
 def pil2pixmap(image):
@@ -56,7 +73,7 @@ class AnimeImageGenerator:
         game_info = GameInfo()
         recency, game_tags = game_info.get_game_keywords(input_values["game_name"])
         input_values["processed_anime_name"] = (
-            get_closest_character(input_values["anime_name"]))
+            get_closest_characters(input_values["anime_name"]))
         input_values.update({"recency": recency, "game_tags": game_tags})
 
         if input_values == self.last_input_values and self.output_filename:
@@ -72,8 +89,9 @@ class AnimeImageGenerator:
         Save the current image.
         """
         if self.output_filename:
-            self.images[self.current_index].save(self.output_filename)
-            print(f"Image saved as: {self.output_filename}")
+            full_filename = f'{self.output_filename}-{time.strftime("%Y%m%d-%H%M%S")}.png'
+            self.images[self.current_index].save(full_filename)
+            print(f"Image saved as: {full_filename}")
 
 
 class AnimeCharacterImageGenerator(QMainWindow):
@@ -140,7 +158,6 @@ class AnimeCharacterImageGenerator(QMainWindow):
         # Input controls
         self.input_controls["generate_button"].clicked.connect(self.generate_image)
         self.input_controls["progress_label"].setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.input_controls["progress_label"].setScaledContents(True)
 
         # Image controls
         self.image_controls["image_label"].setScaledContents(True)
@@ -153,11 +170,11 @@ class AnimeCharacterImageGenerator(QMainWindow):
         navigation_button_layout = QHBoxLayout()
         navigation_button_layout.addWidget(self.image_navigation_buttons["prev_button"])
         navigation_button_layout.addWidget(self.image_navigation_buttons["next_button"])
-        layout.addLayout(navigation_button_layout)
 
         # Add all elements to the layout
         for item in self.image_controls.values():
             layout.addWidget(item)
+        layout.addLayout(navigation_button_layout)
         for item in self.input_controls.values():
             layout.addWidget(item)
         central_widget.setLayout(layout)
@@ -174,6 +191,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
             self.input_controls["progress_label"].setText(
                 "Please enter an anime character name.")
             return
+        self.input_controls["generate_button"].setDisabled(True)
         input_values = {key: widget.text().lower().replace(',', ' ').lstrip().rstrip()
                         for key, widget in self.inputs.items()}
         threading.Thread(target=self.image_generator.process_image,
@@ -221,6 +239,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
         for item in self.input_controls.values():
             item.show()
+        self.input_controls["generate_button"].setEnabled(True)
 
     def show_previous_image(self):
         """
@@ -241,6 +260,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyleSheet(read_stylesheet('./resources/form.css'))
     window = AnimeCharacterImageGenerator()
     window.resize(1000, 1000)
     window.show()
