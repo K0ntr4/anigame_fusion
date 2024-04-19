@@ -4,4 +4,4 @@ PySide6==6.7.0
 requests==2.31.0
 requests_cache==1.2.0
 thefuzz==0.22.1
-torch==2.0.1
+torch==2.2.2
