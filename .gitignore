@@ -8,3 +8,7 @@ __pycache__/
 venv/
 .env
 ./.idea
+game_api_cache.sqlite
+name_api_cache.sqlite
+resources/form.css
+resources/form.css.map
