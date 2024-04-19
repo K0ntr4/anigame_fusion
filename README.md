@@ -56,7 +56,7 @@ Note: CUDA support may require additional configuration and setup, and not all s
 1. Run the main script:
 
     ```bash
-    python main.py
+    python src/main.py
     ```
 
 2. Follow the gui to customize your anime character and select game elements to incorporate into the fusion.
