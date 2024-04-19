@@ -6,8 +6,8 @@ import time
 
 from PySide6.QtWidgets import (  # pylint: disable=E0611
     QApplication, QMainWindow, QLabel,
-    QLineEdit, QPushButton, QVBoxLayout,
-    QWidget, QHBoxLayout
+    QComboBox, QLineEdit, QPushButton,
+    QVBoxLayout, QWidget, QHBoxLayout
 )
 from PySide6.QtGui import QPixmap, QImage  # pylint: disable=E0611
 from PySide6.QtCore import Qt  # pylint: disable=E0611
@@ -112,8 +112,8 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "game_name": QLineEdit(),
             "facial_expression": QLineEdit("smile"),
             "looking_at": QLineEdit("viewer"),
-            "indoors": QLineEdit("indoors"),
-            "daytime": QLineEdit("night"),
+            "indoors": QComboBox(),
+            "daytime": QComboBox(),
             "additional_tags": QLineEdit()
         }
         self.inputs_labels = {
@@ -139,6 +139,9 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "prev_button": QPushButton("<"),
             "next_button": QPushButton(">"),
         }
+        self.inputs["indoors"].addItems(["indoors", "outdoors"])
+        self.inputs["daytime"].addItems(["day", "night"])
+
         self.setup_ui()
         self.show_input_fields()
 
@@ -194,8 +197,15 @@ class AnimeCharacterImageGenerator(QMainWindow):
                 "Please enter an anime character name.")
             return
         self.input_controls["generate_button"].setDisabled(True)
-        input_values = {key: widget.text().lower().replace(',', ' ').lstrip().rstrip()
-                        for key, widget in self.inputs.items()}
+
+        input_values = {}
+        for key, widget in self.inputs.items():
+            if type(widget) == type(QComboBox()):
+                input_values[key] = widget.currentText().lower().replace(',', ' ').lstrip().rstrip()
+                print(input_values[key])
+            else:
+                input_values[key] = widget.text().lower().replace(',', ' ').lstrip().rstrip()
+
         threading.Thread(target=self.image_generator.process_image,
                          args=(input_values, self)).start()
 
@@ -215,6 +225,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
         for item in self.image_controls.values():
             item.show()
+
         if len(self.image_generator.images) != 1:
             for item in self.image_navigation_buttons.values():
                 item.show()
