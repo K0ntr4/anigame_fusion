@@ -6,3 +6,4 @@ requests_cache==1.2.0
 thefuzz==0.22.1
 torch==2.2.2
 transformers==4.39.2
+accelerate==0.28.0
