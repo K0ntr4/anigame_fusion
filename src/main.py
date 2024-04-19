@@ -202,7 +202,6 @@ class AnimeCharacterImageGenerator(QMainWindow):
         for key, widget in self.inputs.items():
             if type(widget) == type(QComboBox()):
                 input_values[key] = widget.currentText().lower().replace(',', ' ').lstrip().rstrip()
-                print(input_values[key])
             else:
                 input_values[key] = widget.text().lower().replace(',', ' ').lstrip().rstrip()
 
