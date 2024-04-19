@@ -9,4 +9,4 @@ venv/
 .env
 ./.idea
 *.sqlite
-resources/*.css*
+*.css*
