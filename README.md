@@ -53,7 +53,7 @@ Note: CUDA support may require additional configuration and setup, and not all s
 
 ## Usage
 
-1. Run the main script:
+1. Run the main script with your PYTHONPATH environment variable set to ".":
 
     ```bash
     python src/main.py
