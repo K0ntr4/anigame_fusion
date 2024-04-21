@@ -1,33 +1,58 @@
 import unittest
+from unittest.mock import patch, Mock
 from src.image.character_info import (
     get_all_characters, get_closest_character, get_closest_characters
 )
 
 
 class TestCharacterFunctions(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.character_list = ["souryuu asuka langley", "warrior of light (ff14)"]
+    def __init__(self, methodName: str = "runTest") -> None:
+        super().__init__(methodName)
+        self.character_list = ["souryuu asuka langley", "warrior of light (ff14)"]
 
-    def test_get_all_characters(self):
+    @patch('requests.get')
+    def test_get_all_characters(self, mock_get):
+        mock_response = Mock()
+        response_body = "1girl, souryuu asuka langley, neon genesis evangelion\n1girl, warrior of light \\(ff14\\), final fantasy\n1girl, akiyama mio, k-on!\n1girl, tifa lockhart, final fantasy\n1girl, 2b \\(nier:automata\\), nier \\(series\\)\n1girl, nakano azusa, k-on!\n1girl, rem \\(re:zero\\), re:zero kara hajimeru isekai seikatsu\n1girl, hirasawa yui, k-on!\n1girl, gotoh hitori, bocchi the rock!\n1girl, ayanami rei, neon genesis evangelion\n1boy, male focus, joseph joestar, jojo no kimyou na bouken\n1girl, matoi ryuuko, kill la kill\n1girl, yor briar, spy x family\n1girl, tainaka ritsu, k-on!\n"
+        mock_response.text = response_body
+        mock_get.return_value = mock_response
+
         characters = get_all_characters()
 
         self.assertIsInstance(characters, list)
         self.assertTrue(all(isinstance(c, str) for c in characters))
-
-    def test_get_closest_character(self):
+    
+    @patch('requests.get')
+    def test_get_closest_character(self, mock_get):
+        mock_response = Mock()
+        response_body = "1girl, souryuu asuka langley, neon genesis evangelion\n1girl, warrior of light \\(ff14\\), final fantasy\n1girl, akiyama mio, k-on!\n1girl, tifa lockhart, final fantasy\n1girl, 2b \\(nier:automata\\), nier \\(series\\)\n1girl, nakano azusa, k-on!\n1girl, rem \\(re:zero\\), re:zero kara hajimeru isekai seikatsu\n1girl, hirasawa yui, k-on!\n1girl, gotoh hitori, bocchi the rock!\n1girl, ayanami rei, neon genesis evangelion\n1boy, male focus, joseph joestar, jojo no kimyou na bouken\n1girl, matoi ryuuko, kill la kill\n1girl, yor briar, spy x family\n1girl, tainaka ritsu, k-on!\n"
+        mock_response.text = response_body
+        mock_get.return_value = mock_response
+    
         closest_name = get_closest_character("Asuka Langley")
 
         self.assertEqual(closest_name, "1girl, souryuu asuka langley, neon genesis evangelion")
 
-    def test_get_closest_characters(self):
+    @patch('requests.get')
+    def test_get_closest_characters(self, mock_get):
+        mock_response = Mock()
+        response_body = "1boy, male focus, uzumaki naruto, naruto \\(series\\)\n1boy, male focus, uzumaki boruto, naruto \\(series\\)\n1girl, uzumaki himawari, naruto \\(series\\)\n1girl, carrot \\(one piece\\), one piece\n1girl, uzumaki kushina, naruto \\(series\\)\n"
+        mock_response.text = response_body
+        mock_get.return_value = mock_response
+
         closest_names = get_closest_characters("Naruto Uzumaki", 3)
 
         self.assertEqual(closest_names, ['1boy, male focus, uzumaki naruto, naruto \\(series\\)',
                                          '1boy, male focus, uzumaki boruto, naruto \\(series\\)',
                                          '1girl, uzumaki himawari, naruto \\(series\\)'])
 
-    def test_get_closest_character_not_found(self):
+    @patch('requests.get')
+    def test_get_closest_character_not_found(self, mock_get):
+        mock_response = Mock()
+        response_body = "1boy, male focus, uzumaki naruto, naruto \\(series\\)\n1boy, male focus, uzumaki boruto, naruto \\(series\\)\n1girl, uzumaki himawari, naruto \\(series\\)\n1girl, carrot \\(one piece\\), one piece\n1girl, uzumaki kushina, naruto \\(series\\)\n"
+        mock_response.text = response_body
+        mock_get.return_value = mock_response
+        
         closest_name = get_closest_character("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
 
         self.assertIsNone(closest_name)

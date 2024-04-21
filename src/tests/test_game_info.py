@@ -1,7 +1,6 @@
 import time
 import unittest
 from unittest.mock import patch, Mock
-from requests.exceptions import HTTPError
 from src.image.game_info import (
     GameInfo, get_year_recency,
     get_summary_keywords, is_relevant_adjective
