@@ -6,8 +6,8 @@ import time
 
 from PySide6.QtWidgets import (  # pylint: disable=E0611
     QApplication, QMainWindow, QLabel,
-    QComboBox, QLineEdit, QPushButton,
-    QVBoxLayout, QWidget, QHBoxLayout
+    QLineEdit, QPushButton, QVBoxLayout,
+    QWidget, QHBoxLayout
 )
 from PySide6.QtGui import QPixmap, QImage  # pylint: disable=E0611
 from PySide6.QtCore import Qt  # pylint: disable=E0611
@@ -112,8 +112,8 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "game_name": QLineEdit(),
             "facial_expression": QLineEdit("smile"),
             "looking_at": QLineEdit("viewer"),
-            "indoors": QComboBox(),
-            "daytime": QComboBox(),
+            "indoors": QLineEdit("indoors"),
+            "daytime": QLineEdit("night"),
             "additional_tags": QLineEdit()
         }
         self.inputs_labels = {
@@ -139,9 +139,6 @@ class AnimeCharacterImageGenerator(QMainWindow):
             "prev_button": QPushButton("<"),
             "next_button": QPushButton(">"),
         }
-        self.inputs["indoors"].addItems(["indoors", "outdoors"])
-        self.inputs["daytime"].addItems(["day", "night"])
-
         self.setup_ui()
         self.show_input_fields()
 
@@ -198,12 +195,8 @@ class AnimeCharacterImageGenerator(QMainWindow):
             return
         self.input_controls["generate_button"].setDisabled(True)
 
-        input_values = {}
-        for key, widget in self.inputs.items():
-            if type(widget) == type(QComboBox()):
-                input_values[key] = widget.currentText().lower().replace(',', ' ').lstrip().rstrip()
-            else:
-                input_values[key] = widget.text().lower().replace(',', ' ').lstrip().rstrip()
+        input_values = {key: widget.text().lower().replace(',', ' ').lstrip().rstrip()
+                        for key, widget in self.inputs.items()}
 
         threading.Thread(target=self.image_generator.process_image,
                          args=(input_values, self)).start()
