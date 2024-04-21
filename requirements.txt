@@ -7,3 +7,4 @@ thefuzz==0.22.1
 torch==2.2.2
 transformers==4.39.2
 accelerate==0.28.0
+mock==5.1.0
