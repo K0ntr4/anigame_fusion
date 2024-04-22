@@ -7,17 +7,17 @@ from src.image.game_info import (
 )
 
 TEKKEN_GAME_INFO = {
-            'id': 7498,
-            'first_release_date': 1424217600,
-            'genres': [4],
-            'name': 'Tekken 7',
-            'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
-                        'the reasons behind each step of their ceaseless fight. '
-                        'Powered by Unreal Engine 4, Tekken 7 features stunning '
-                        'story-driven cinematic battles and intense duels that '
-                        'can be enjoyed with friends and rivals alike through '
-                        'innovative fight mechanics.')
-        }
+    'id': 7498,
+    'first_release_date': 1424217600,
+    'genres': [4],
+    'name': 'Tekken 7',
+    'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
+                'the reasons behind each step of their ceaseless fight. '
+                'Powered by Unreal Engine 4, Tekken 7 features stunning '
+                'story-driven cinematic battles and intense duels that '
+                'can be enjoyed with friends and rivals alike through '
+                'innovative fight mechanics.')
+}
 
 
 class TestGameInfo(unittest.TestCase):
