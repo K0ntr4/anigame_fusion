@@ -6,6 +6,19 @@ from src.image.game_info import (
     get_summary_keywords, is_relevant_adjective
 )
 
+TEKKEN_GAME_INFO = {
+            'id': 7498,
+            'first_release_date': 1424217600,
+            'genres': [4],
+            'name': 'Tekken 7',
+            'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
+                        'the reasons behind each step of their ceaseless fight. '
+                        'Powered by Unreal Engine 4, Tekken 7 features stunning '
+                        'story-driven cinematic battles and intense duels that '
+                        'can be enjoyed with friends and rivals alike through '
+                        'innovative fight mechanics.')
+        }
+
 
 class TestGameInfo(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
@@ -39,18 +52,7 @@ class TestGameInfo(unittest.TestCase):
         Test IGDB Response on https://api.igdb.com/v4/games
         """
         mock_response = Mock()
-        response_body = [{
-            'id': 7498,
-            'first_release_date': 1424217600,
-            'genres': [4],
-            'name': 'Tekken 7',
-            'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
-                        'the reasons behind each step of their ceaseless fight. '
-                        'Powered by Unreal Engine 4, Tekken 7 features stunning '
-                        'story-driven cinematic battles and intense duels that '
-                        'can be enjoyed with friends and rivals alike through '
-                        'innovative fight mechanics.')
-        }, {}]
+        response_body = [TEKKEN_GAME_INFO, {}]
         mock_response.json.return_value = response_body
         mock_post_info.return_value = mock_response
         self.game_info.token = {
@@ -84,29 +86,13 @@ class TestGameInfo(unittest.TestCase):
 
         self.assertEqual(response_body[0]["name"], 'Fighting')
 
-    @patch("requests.get")
-    @patch("src.image.game_info.GameInfo.get_game_info",
-           Mock(return_value={
-                'id': 7498,
-                'first_release_date': 1424217600,
-                'genres': [4],
-                'name': 'Tekken 7',
-                'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
-                            'the reasons behind each step of their ceaseless fight. '
-                            'Powered by Unreal Engine 4, Tekken 7 features stunning '
-                            'story-driven cinematic battles and intense duels that '
-                            'can be enjoyed with friends and rivals alike through '
-                            'innovative fight mechanics.')}))
-    def test_get_game_keywords(self, mock_get):
+    @patch("src.image.game_info.GameInfo.get_game_info", Mock(return_value=TEKKEN_GAME_INFO))
+    @patch("src.image.game_info.GameInfo.get_genres", Mock(return_value=['Fighting']))
+    @patch("src.image.game_info.GameInfo.authenticate", Mock())
+    def test_get_game_keywords(self):
         """
         Test IGDB Response on https://api.igdb.com/v4/genres
         """
-        mock_response = Mock()
-        response_body = {
-            "mid": ["clan", "Experience", "epic", "conclusion", "reasons", "Fighting"]
-        }
-        mock_response.json.return_value = response_body
-        mock_get.return_value = mock_response
         self.game_info.token = {
             "access_token": "someAccessToken",
             "expires_in": 9112004,
