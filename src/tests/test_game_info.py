@@ -85,6 +85,7 @@ class TestGameInfo(unittest.TestCase):
         self.assertEqual(response_body[0]["name"], 'Fighting')
 
     @patch("requests.get")
+    @patch("src.image.game_info.GameInfo.authenticate", Mock())
     def test_get_game_keywords(self, mock_get):
         """
         Test IGDB Response on https://api.igdb.com/v4/genres
@@ -95,6 +96,11 @@ class TestGameInfo(unittest.TestCase):
         }
         mock_response.json.return_value = response_body
         mock_get.return_value = mock_response
+        self.game_info.token = {
+            "access_token": "someAccessToken",
+            "expires_in": 9112004,
+            "token_type": "bearer"
+        }
         keywords = self.game_info.get_game_keywords('Tekken 7')
 
         self.assertIsNotNone(keywords)
