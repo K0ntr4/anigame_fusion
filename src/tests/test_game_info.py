@@ -85,7 +85,18 @@ class TestGameInfo(unittest.TestCase):
         self.assertEqual(response_body[0]["name"], 'Fighting')
 
     @patch("requests.get")
-    @patch("src.image.game_info.GameInfo.authenticate", Mock())
+    @patch("src.image.game_info.GameInfo.get_game_info",
+           Mock(return_value={
+                'id': 7498,
+                'first_release_date': 1424217600,
+                'genres': [4],
+                'name': 'Tekken 7',
+                'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
+                            'the reasons behind each step of their ceaseless fight. '
+                            'Powered by Unreal Engine 4, Tekken 7 features stunning '
+                            'story-driven cinematic battles and intense duels that '
+                            'can be enjoyed with friends and rivals alike through '
+                            'innovative fight mechanics.')}))
     def test_get_game_keywords(self, mock_get):
         """
         Test IGDB Response on https://api.igdb.com/v4/genres
