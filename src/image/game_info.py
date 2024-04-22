@@ -73,7 +73,6 @@ class GameInfo:
         """
         if self.token and time.time() - self.authentication_time < self.token['expires_in']:
             return
-
         url = "https://id.twitch.tv/oauth2/token"
         payload = {
             "client_id": self.client_id,
@@ -84,6 +83,7 @@ class GameInfo:
         response.raise_for_status()
         self.token = response.json()
         self.authentication_time = time.time()
+        return
 
     def get_game_info(self, name):
         """

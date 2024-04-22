@@ -194,8 +194,10 @@ class AnimeCharacterImageGenerator(QMainWindow):
                 "Please enter an anime character name.")
             return
         self.input_controls["generate_button"].setDisabled(True)
+
         input_values = {key: widget.text().lower().replace(',', ' ').lstrip().rstrip()
                         for key, widget in self.inputs.items()}
+
         threading.Thread(target=self.image_generator.process_image,
                          args=(input_values, self)).start()
 
@@ -215,6 +217,7 @@ class AnimeCharacterImageGenerator(QMainWindow):
 
         for item in self.image_controls.values():
             item.show()
+
         if len(self.image_generator.images) != 1:
             for item in self.image_navigation_buttons.values():
                 item.show()

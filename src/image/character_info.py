@@ -7,13 +7,14 @@ CHARACTER_LIST_URL = ("https://huggingface.co/spaces/cagliostrolab"
                       "/animagine-xl-3.1/raw/main/wildcard/characterfull.txt")
 
 
-def get_all_characters():
+def get_all_characters() -> list[str]:
     """
     Get all characters from the character list.
     """
-    with requests.get(CHARACTER_LIST_URL, timeout=3) as response:
-        response.raise_for_status()
-        return response.text.split("\n")
+    response = requests.get(CHARACTER_LIST_URL, timeout=3)
+    response.raise_for_status()
+    text: list[str] = response.text.split("\n")
+    return text
 
 
 def get_closest_character(name):
