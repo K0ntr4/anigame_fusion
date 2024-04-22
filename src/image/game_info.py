@@ -85,7 +85,6 @@ class GameInfo:
         self.authentication_time = time.time()
         return
 
-
     def get_game_info(self, name):
         """
         Fetch game information from the IGDB API.

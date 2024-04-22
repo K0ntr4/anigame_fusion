@@ -15,7 +15,7 @@ class TestGameInfo(unittest.TestCase):
     @patch('requests.post')
     def test_authenticate(self, mock_post):
         """
-        Test Twitch API Authentication        
+        Test Twitch API Authentication
         """
         mock_response = Mock()
         response_body = {
@@ -31,7 +31,7 @@ class TestGameInfo(unittest.TestCase):
         self.assertIsNotNone(self.game_info.token)
         self.assertTrue(time.time() - response_body["expires_in"]
                         < self.game_info.authentication_time)
-    
+
     @patch("requests.post")
     @patch("src.image.game_info.GameInfo.authenticate", Mock())
     def test_get_game_info(self, mock_post_info):
@@ -44,12 +44,20 @@ class TestGameInfo(unittest.TestCase):
             'first_release_date': 1424217600,
             'genres': [4],
             'name': 'Tekken 7',
-            'summary': 'Experience the epic conclusion of the Mishima clan and unravel the reasons behind each step of their ceaseless fight. Powered by Unreal Engine 4, Tekken 7 features stunning story-driven cinematic battles and intense duels that can be enjoyed with friends and rivals alike through innovative fight mechanics.'
+            'summary': ('Experience the epic conclusion of the Mishima clan and unravel '
+                        'the reasons behind each step of their ceaseless fight. '
+                        'Powered by Unreal Engine 4, Tekken 7 features stunning '
+                        'story-driven cinematic battles and intense duels that '
+                        'can be enjoyed with friends and rivals alike through '
+                        'innovative fight mechanics.')
         }, {}]
         mock_response.json.return_value = response_body
         mock_post_info.return_value = mock_response
-        
-        self.game_info.token = {"access_token": "someAccessToken", "expires_in": 9112004, "token_type": "bearer"}
+        self.game_info.token = {
+            "access_token": "someAccessToken",
+            "expires_in": 9112004,
+            "token_type": "bearer"
+        }
         info = self.game_info.get_game_info("Tekken 7")
 
         self.assertEqual(response_body[0], info)
@@ -67,8 +75,11 @@ class TestGameInfo(unittest.TestCase):
         }]
         mock_response.json.return_value = response_body
         mock_post.return_value = mock_response
-    
-        self.game_info.token = {"access_token": "someAccessToken", "expires_in": 9112004, "token_type": "bearer"}
+        self.game_info.token = {
+            "access_token": "someAccessToken",
+            "expires_in": 9112004,
+            "token_type": "bearer"
+        }
         self.game_info.get_genres([4])
 
         self.assertEqual(response_body[0]["name"], 'Fighting')
@@ -84,7 +95,6 @@ class TestGameInfo(unittest.TestCase):
         }
         mock_response.json.return_value = response_body
         mock_get.return_value = mock_response
-        
         keywords = self.game_info.get_game_keywords('Tekken 7')
 
         self.assertIsNotNone(keywords)
