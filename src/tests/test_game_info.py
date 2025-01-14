@@ -1,8 +1,9 @@
 import time
 import unittest
+import random
 from unittest.mock import patch, Mock
 from src.image.game_info import (
-    GameInfo, get_year_recency,
+    GameInfo, get_year_recency, DATE_RECENCY,
     get_summary_keywords, is_relevant_adjective
 )
 
@@ -104,11 +105,11 @@ class TestGameInfo(unittest.TestCase):
         self.assertIn("Fighting", keywords[1])
 
     def test_get_year_recency(self):
-        self.assertEqual(get_year_recency(time.time()), 'newest')
-        self.assertEqual(get_year_recency(time.time() - 4 * 365 * 24 * 60 * 60), 'recent')
-        self.assertEqual(get_year_recency(time.time() - 7 * 365 * 24 * 60 * 60), 'mid')
-        self.assertEqual(get_year_recency(time.time() - 10 * 365 * 24 * 60 * 60), 'early')
-        self.assertEqual(get_year_recency(time.time() - 15 * 365 * 24 * 60 * 60), 'oldest')
+        for recency, (start_year, end_year) in DATE_RECENCY.items():
+            start_timestamp = time.mktime(time.strptime(f"01 Jan {start_year}", "%d %b %Y"))
+            end_timestamp = time.mktime(time.strptime(f"31 Dec {end_year}", "%d %b %Y"))
+            random_timestamp = random.uniform(start_timestamp, end_timestamp)
+            self.assertEqual(get_year_recency(random_timestamp), recency)
 
     def test_get_summary_keywords(self):
         keywords = get_summary_keywords('Experience the epic conclusion of the Mishima clan '
