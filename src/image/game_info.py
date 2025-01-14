@@ -13,7 +13,7 @@ nltk.download('wordnet', quiet=True)
 requests_cache.install_cache('game_api_cache', expire_after=3600)
 
 CURRENT_YEAR = int(time.strftime('%Y', time.gmtime(time.time())))
-DATE_RECENCY = { # Date ranges provided by ai model
+DATE_RECENCY = {  # Date ranges provided by ai model
     'newest': (2021, int(time.strftime('%Y', time.gmtime(time.time())))),
     'recent': (2018, 2020),
     'mid': (2015, 2017),
