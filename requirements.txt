@@ -5,6 +5,6 @@ requests==2.32.4
 requests_cache==1.2.1
 thefuzz==0.22.1
 torch==2.7.1
-transformers==4.54.0
+transformers==4.55.0
 accelerate==1.9.0
 mock==5.2.0
