@@ -1,5 +1,5 @@
 diffusers==0.37.0
-PySide6==6.10.2
+PySide6==6.11.0
 nltk==3.9.4
 requests==2.33.0
 requests_cache==1.3.1
